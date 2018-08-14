@@ -3,15 +3,15 @@
 Bei der Entwicklungen von Anwendungen in einer  Microservice Architektur  muss man mit wesentlich komplexeren 
 Laufzeitumgebungen zurechtkommen als bei  monolithischen Anwendungen. Im Gegensatz zu einem Monolithen
 kann eine Microservice Architektur nur in Teilen verfügbar sein. Continous Deployment einzelner Microservice
-ührt dazu, dass es keine einheitliche Gesamtversion des Systems mehr gibt. Irgendwie muss man sich hier
+führt dazu, dass es keine einheitliche Gesamtversion des Systems mehr gibt. Irgendwie muss man sich hier
 Übersicht verschaffen. Wenn man das dann auch schon während der Entwicklung in den
-Anfangs noch nicht so stabilen  Integrations- und Testsystemen schafft, vermeidet man viel Aufwand bei der Fehlerdiagnose.
+anfangs noch nicht so stabilen  Integrations- und Testsystemen schafft, vermeidet man viel Aufwand bei der Fehlerdiagnose.
 
 Wir haben vor kurzem bei einem großen Kunden ein Projekt in Mikroservice-Architektur auf Basis von Spring Boot und Docker
 in Produktion gebracht.  Zu Beginn der Entwicklung stellte man sich als Entwickler oft die Frage, ob 
 die gerade gemachten Änderungen das System
 unbrauchbar gemacht haben, oder ob das System einen teilweisen Ausfall hat, weil z.B. gerade ein anderer Service nicht 
-starten will.  Bei einem klassichen Monolithen kann man
+starten will.  Bei einem klassischen Monolithen kann man
 sich meistens auf der Maschine mit dem Applikationsserver einloggen und sich auf der Kommandozeile umsehen. Bei 20
 Service Instanzen (wie bei unserem Projekt), die sich auf vier virtuellen Maschinen verteilen, lässt sich so nicht 
 mehr effizient arbeiten. Hier muss automatisiert werden!
@@ -20,14 +20,14 @@ Neben einer zentralen Logfile Aggregation ist das automatische Einsammeln des Sy
 Wir haben dafür eine relativ einfache Lösung gefunden, die ich hier kurz skizzieren möchte.
 
 ## Netzwerkmonitoring
-Netzwerkmonitoringsystem wie z.B. nagios sind die klassische Lösung, um den Gesamtzustand eines Systems abzufragen. Freie
-System wie nagios haben allerdings Probleme mit der dynamischen Natur einer Microservce Architektur.
+Netzwerkmonitoringsysteme wie z.B. nagios sind die klassische Lösung, um den Gesamtzustand eines Systems abzufragen. Freie
+System wie nagios haben allerdings Probleme mit der dynamischen Natur einer Microservice Architektur.
  Wir setzen in unserem Projekt ein kommerzielles Netzwerkmonitoringsystem ein, das mit den dynamischen
 Aspekten umgehen kann. Allerdings hängen die Lizenzkosten von der Anzahl der zu überwachenden Server ab. Bei einer 
 Microservice Architektur mit vielen Docker Container treibt dies den Preis steil nach oben, so dass nur die 
 produktiven und produktionsnahen Umgebungen überwacht werden können. 
 
-Wir wollten aber für unsere Integrations- und Entwicklungssysteme des Systemzustand schon während der Entwicklung 
+Wir wollten aber für unsere Integrations- und Entwicklungssysteme des Systemzustands schon während der Entwicklung 
 erfassen. Spring Boot besitzt einen eingebauten Diagnosemechanismus, den man dazu benutzen kann.
 
 	
@@ -50,7 +50,7 @@ Unsere Lösung basiert auf den Endpunkten `health` und `info`.
 Der `/health` Endpunkt liefert Informationen zum Gesundheitszustand eines Microservices. Standardmäßig liefert Spring 
 Boot Basisinformationen zum Festplattenplatz und zu benutzten Datenbanken sowie JMS-Servern. Man kann aber sehr einfach neue 
 Checks hinzufügen, indem man Spring-Komponenten schreibt, die das `HealthIndicator` Interface implementieren. Die Methode
-`health()` liefert dann ein Statusobjekt mit dem Ergbenis des Checks zurück.
+`health()` liefert dann ein Statusobjekt mit dem Ergebnis des Checks zurück.
 Das folgende Beispiel prüft, ob sich ein externer REST-Service erreichen lässt:
 	
 	
@@ -82,7 +82,7 @@ Das folgende Beispiel prüft, ob sich ein externer REST-Service erreichen lässt
 
 Wenn man möchte (und man sollte!), kann man jede externe Abhängigkeit eines Microservices einen Test schreiben.
  Wir haben z.B. folgendes geprüft:
-- Funktionsfähigkeit von beutzten REST- oder Web-Services
+- Funktionsfähigkeit von benutzten REST- oder Web-Services
 - Erreichbarkeit sonstiger externer URLs
 - Überprüfung von gemounteten Dateisystemen. Man kann hier prüfen, ob die erwarteten Dateien und Verzeichnisse tatsächlich 
 vorhanden sind und ob die Zugriffsrechte stimmen.
@@ -90,7 +90,7 @@ vorhanden sind und ob die Zugriffsrechte stimmen.
 den Namen und den Status des zuletzt ausgeführten Datenbankskripts abfragen.
 
 ### Der Info Endpunkt
-Der Info Endpoint (`/info`) gibt alle Konfigurationswerte mit dem Prefix info. zurück. Mit ihm lassen sich sehr
+Der Info Endkunpt (`/info`) gibt alle Konfigurationswerte mit dem Präfix `info`. zurück. Mit ihm lassen sich sehr
  gut Informationen aus dem Buildprozess (z.B. die Versionsnummer 
 und das Builddatum) verfügbar machen. Wenn man Maven verwendet und die Variablenersetzung für Properties-Dateien
  einschaltet, führen ein Einträge wie z.B.:
@@ -128,14 +128,14 @@ Reihe nach abarbeitet. Aus den einzelnen JSON-Antworten erstellt dieser neue
 eine Webseite geschrieben, die diese Gesamtantwort optisch ansprechend darstellt.
 Bei der Implementierung eines solchen Aggregator Services sollte man versuchen,
  dass in einem Cluster jede einzelne Instanz eines Services abgefragt wird. Es hängt dabei
-von der Dockerlaufzeitumgebung und der verwendeten Loadbalancern ab, wie man die 
-einzelnen Instanzen addressieren kann. In unserem Fall verwendet die Laufzeitumgebung
+von der Docker Laufzeitumgebung und der verwendeten Loadbalancern ab, wie man die 
+einzelnen Instanzen adressieren kann. In unserem Fall verwendet die Laufzeitumgebung
 ein DNS basiertes Verteilungsverfahren. Das heißt der Aggregator fragt nicht  nur die erste IP-Adresse
  zu einem Hostnamen ab sondern alle.
 Wenn man den Rest-Endpunkt als Unterklasse von 
 `org.springframework.boot.actuate.endpoint.AbstractEndpoint` implementiert wird er als Spring Boot Actuator 
 Endpunkt registriert. Das bedeutet, dass die Spring Boot Konfigurationseinstellungen 
-für Actuator Endpunkte (Authentisierung, Autoriserung, Ein- und Ausschalten) auch
+für Actuator Endpunkte (Authentisierung, Autorisierung, Ein- und Ausschalten) auch
 für den selbst geschriebenen Endpunkt gelten.
 Bei uns sieht das Endergebnis als Webseite so aus:
 
