@@ -90,7 +90,7 @@ vorhanden sind und ob die Zugriffsrechte stimmen.
 den Namen und den Status des zuletzt ausgeführten Datenbankskripts abfragen.
 
 ### Der Info Endpunkt
-Der Info Endkunpt (`/info`) gibt alle Konfigurationswerte mit dem Präfix `info`. zurück. Mit ihm lassen sich sehr
+Der Info Endpunkt (`/info`) gibt alle Konfigurationswerte mit dem Präfix `info`. zurück. Mit ihm lassen sich sehr
  gut Informationen aus dem Buildprozess (z.B. die Versionsnummer 
 und das Builddatum) verfügbar machen. Wenn man Maven verwendet und die Variablenersetzung für Properties-Dateien
  einschaltet, führen ein Einträge wie z.B.:
