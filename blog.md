@@ -1,4 +1,4 @@
-# Health Checks mit Spring Boot
+# Systemüberwachung mit den Spring Boot Health Checks
 
 Bei der Entwicklungen von Anwendungen in einer  Microservice Architektur  muss man mit wesentlich komplexeren 
 Laufzeitumgebungen zurechtkommen als bei  monolithischen Anwendungen. Im Gegensatz zu einem Monolithen
